@@ -42,16 +42,24 @@
       .vt-header-search { max-width: none !important; order: 0; flex-basis: 100%; min-width: 0 !important; }
     }
     @media (max-width: 760px) {
+      header { padding: 12px 16px !important; gap: 12px !important; }
+      .vt-header-search { order: 2 !important; flex-basis: 100% !important; max-width: none !important; }
+      .vt-header-actions { margin-left: auto !important; gap: 6px !important; }
       .vt-hero { padding: 32px 20px !important; }
       .vt-hero-title { font-size: var(--text-2xl) !important; }
       .vt-footer-grid { grid-template-columns: repeat(2, 1fr) !important; }
-      .vt-product-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)) !important; gap: 12px !important; }
+      .vt-product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 12px !important; }
       .vt-detail-row { flex-direction: column !important; }
       .vt-detail-photo { width: 100% !important; height: 220px !important; }
       .vt-cart-bar { padding: 12px 16px !important; }
+      .vt-cart-drawer { width: 100% !important; max-width: 100vw !important; }
+      .vt-assistant-panel { left: 12px !important; right: 12px !important; bottom: 84px !important; width: auto !important; max-width: none !important; }
+      .vt-cookie-panel { left: 12px !important; right: 12px !important; bottom: 12px !important; width: auto !important; max-width: none !important; }
     }
     @media (max-width: 420px) {
       .vt-footer-grid { grid-template-columns: 1fr !important; }
+      .vt-product-grid { grid-template-columns: 1fr !important; }
+      .vt-product-card { padding: 14px !important; }
     }
   </style>
 </helmet>
@@ -366,7 +374,7 @@
   <sc-if value="{{ cartOpen }}" hint-placeholder-val="{{ false }}">
     <div style="position:fixed; inset:0; z-index:50; font-family:var(--font-body);">
       <div onClick="{{ closeCart }}" style="position:absolute; inset:0; background:rgba(11,61,42,0.45); backdrop-filter:blur(2px);"></div>
-      <div style="position:absolute; top:0; right:0; height:100%; width:380px; max-width:92vw; background:var(--color-surface); box-shadow:var(--shadow-lg); display:flex; flex-direction:column;">
+      <div class="vt-cart-drawer" style="position:absolute; top:0; right:0; height:100%; width:380px; max-width:92vw; background:var(--color-surface); box-shadow:var(--shadow-lg); display:flex; flex-direction:column;">
         <div style="padding:20px; border-bottom:1px solid var(--color-border); display:flex; justify-content:space-between; align-items:center;">
           <div style="font-family:var(--font-display); font-weight:700; font-size:var(--text-lg);">{{ drawerTitle }}</div>
           <button onClick="{{ closeCart }}" style="border:none; background:transparent; font-size:20px; cursor:pointer; color:var(--color-text-muted);">×</button>
@@ -437,7 +445,7 @@
   </sc-if>
 
   <sc-if value="{{ cookieConsentPending }}" hint-placeholder-val="{{ true }}">
-    <div style="position:fixed; left:24px; bottom:24px; z-index:58; width:420px; max-width:calc(100vw - 48px); background:var(--color-surface); border:1px solid var(--color-border); box-shadow:var(--shadow-lg); border-radius:var(--radius-lg); padding:18px; font-family:var(--font-body);">
+    <div class="vt-cookie-panel" style="position:fixed; left:24px; bottom:24px; z-index:58; width:420px; max-width:calc(100vw - 48px); background:var(--color-surface); border:1px solid var(--color-border); box-shadow:var(--shadow-lg); border-radius:var(--radius-lg); padding:18px; font-family:var(--font-body);">
       <div style="font-family:var(--font-display); font-weight:700; margin-bottom:6px;">Confidentialité</div>
       <p style="margin:0 0 14px; color:var(--color-text-muted); font-size:var(--text-sm); line-height:var(--leading-relaxed);">Vitalia utilise uniquement un stockage local pour mémoriser le panier, le compte de démonstration et améliorer le test du site.</p>
       <div style="display:flex; gap:10px; flex-wrap:wrap;">
@@ -448,7 +456,7 @@
   </sc-if>
 
   <sc-if value="{{ assistantOpen }}" hint-placeholder-val="{{ false }}">
-    <div style="position:fixed; bottom:96px; right:20px; z-index:56; width:340px; max-width:88vw; background:var(--color-surface); border-radius:var(--radius-lg); box-shadow:var(--shadow-lg); border:1px solid var(--color-border); padding:18px; font-family:var(--font-body);">
+    <div class="vt-assistant-panel" style="position:fixed; bottom:96px; right:20px; z-index:56; width:340px; max-width:88vw; background:var(--color-surface); border-radius:var(--radius-lg); box-shadow:var(--shadow-lg); border:1px solid var(--color-border); padding:18px; font-family:var(--font-body);">
       <div style="display:flex; align-items:flex-start; gap:8px; margin-bottom:8px;">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="2" style="flex-shrink:0; margin-top:2px;"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
         <div style="font-family:var(--font-display); font-weight:700; line-height:1.3;">Conseil IA</div>

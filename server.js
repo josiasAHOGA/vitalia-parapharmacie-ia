@@ -144,11 +144,91 @@ function classifyNeed(question) {
   }));
 }
 
+function detectIntent(question) {
+  const q = normalize(question);
+  const has = (words) => words.some((word) => q.includes(word));
+
+  if (has(['enceinte', 'grossesse', 'allaitement', 'ordonnance', 'traitement', 'fievre', 'infection', 'douleur forte'])) return 'medical-warning';
+  if (has(['bouton', 'acne', 'imperfection', 'peau grasse', 'point noir'])) return 'acne';
+  if (has(['sensible', 'rougeur', 'irritation', 'tiraille', 'allergie'])) return 'sensitive-skin';
+  if (has(['seche', 'hydrat', 'creme', 'barriere'])) return 'dry-skin';
+  if (has(['soleil', 'spf', 'uv', 'protection solaire', 'tache'])) return 'sun';
+  if (has(['cheveux', 'shampoing', 'chute', 'pellicule', 'cuir chevelu'])) return 'hair';
+  if (has(['bebe', 'nourrisson', 'maman', 'change', 'liniment', 'couche'])) return 'baby';
+  if (has(['fatigue', 'immunite', 'defense', 'vitamine', 'energie', 'forme'])) return 'supplements';
+  if (has(['livraison', 'delai', 'expedition', 'retrait'])) return 'delivery';
+  if (has(['prix', 'promo', 'remise', 'moins cher', 'reduction'])) return 'price';
+  return 'general';
+}
+
+function adviceForIntent(intent, categoryLabel) {
+  const advice = {
+    'medical-warning': [
+      'Votre question semble demander un avis personnalisé.',
+      'Par prudence, demandez conseil à un pharmacien ou à un professionnel de santé avant d’utiliser un produit.',
+      'Je peux seulement vous orienter vers une catégorie de produits non médicamenteux.',
+    ],
+    acne: [
+      'Pour les boutons ou imperfections, privilégiez une routine courte: nettoyage doux, soin ciblé, puis hydratation légère.',
+      'Évitez de multiplier les actifs si votre peau réagit facilement.',
+      'Les soins visage du catalogue sont les plus adaptés pour commencer.',
+    ],
+    'sensitive-skin': [
+      'Pour une peau sensible, choisissez une routine douce et progressive.',
+      'Une eau micellaire ou un nettoyant doux peut aider, puis une crème hydratante pour renforcer le confort.',
+      'Testez un produit à la fois afin d’identifier ce que votre peau tolère bien.',
+    ],
+    'dry-skin': [
+      'Pour une peau sèche, l’objectif est de restaurer le confort et l’hydratation.',
+      'Privilégiez une crème nourrissante et évitez les nettoyages trop décapants.',
+      'Une application régulière matin et soir rend la routine plus stable.',
+    ],
+    sun: [
+      'Pour le soleil, le réflexe prioritaire est une protection SPF élevée.',
+      'Appliquez-la généreusement et renouvelez-la en cas d’exposition prolongée.',
+      'C’est important en cas de taches, peau sensible ou forte exposition.',
+    ],
+    hair: [
+      'Pour les cheveux, il faut distinguer chute, sécheresse, pellicules ou cuir chevelu sensible.',
+      'Un shampoing doux est une bonne base avant d’ajouter un soin ciblé.',
+      'La catégorie cheveux est la plus pertinente pour cette demande.',
+    ],
+    baby: [
+      'Pour bébé, privilégiez des produits très doux et adaptés aux peaux fragiles.',
+      'Le liniment, le gel lavant et les huiles bébé peuvent aider pour la toilette ou le change.',
+      'En cas d’irritation importante ou persistante, demandez un avis professionnel.',
+    ],
+    supplements: [
+      'Pour la fatigue ou l’immunité, les compléments peuvent accompagner une bonne routine de sommeil, alimentation et hydratation.',
+      'Les vitamines ou formules défense peuvent être pertinentes selon le besoin.',
+      'Demandez conseil si vous prenez déjà un traitement ou si la fatigue persiste.',
+    ],
+    delivery: [
+      'Vitalia propose la livraison standard, la livraison express et le retrait en pharmacie.',
+      'Le choix dépend de l’urgence et de votre zone.',
+      'Vous pouvez sélectionner le mode de livraison au moment de valider le panier.',
+    ],
+    price: [
+      'Vous pouvez comparer les prix directement dans le catalogue.',
+      'Les produits en promotion affichent un badge et un ancien prix barré.',
+      'Au panier, la remise IA peut proposer une réduction adaptée à la commande.',
+    ],
+    general: [
+      `D’après votre question, je vous oriente vers la catégorie ${categoryLabel}.`,
+      'Je vous propose de comparer les produits recommandés et d’ouvrir chaque fiche pour voir les détails.',
+      'Si votre besoin est médical ou persistant, demandez un avis personnalisé à un professionnel de santé.',
+    ],
+  };
+
+  return advice[intent] || advice.general;
+}
+
 function recommendProducts(question) {
   const data = loadData();
   const predictions = classifyNeed(question);
   const best = predictions[0] || { label: 'visage', confidence: 0 };
   const category = data.categories.find((item) => item.id === best.label) || { id: best.label, label: best.label };
+  const intent = detectIntent(question);
   const products = data.products
     .filter((product) => product.category === best.label)
     .map((product) => ({ ...product, score: data.purchaseScore(product) }))
@@ -163,12 +243,18 @@ function recommendProducts(question) {
     }));
 
   const productNames = products.map((product) => `${product.brand} ${product.name}`).join(', ');
-  const answer = [
+  let answer = [
     `Le modèle classe votre besoin dans la catégorie "${category.label}" avec ${best.confidence}% de confiance.`,
     products.length
       ? `Je vous conseille de comparer ces références : ${productNames}.`
       : 'Je vous conseille de demander un avis au pharmacien avant de choisir une référence.',
     'Cette recommandation vient d’un apprentissage supervisé simple entraîné sur des exemples de besoins clients; elle ne remplace pas un avis médical personnalisé.',
+  ].join(' ');
+  answer = [
+    ...adviceForIntent(intent, category.label),
+    products.length ? `Produits à comparer: ${productNames}.` : 'Aucun produit précis ne ressort pour cette demande dans le catalogue actuel.',
+    `Analyse IA: besoin classé en "${category.label}" avec ${best.confidence}% de confiance.`,
+    'Ce conseil ne remplace pas un avis médical personnalisé.',
   ].join(' ');
 
   return {
@@ -177,6 +263,7 @@ function recommendProducts(question) {
     predictions,
     products,
     answer,
+    intent,
     method: 'Apprentissage supervise: classification Naive Bayes + score produit',
   };
 }
