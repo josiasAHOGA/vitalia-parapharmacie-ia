@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="_ds/vitalia-parapharmacie-design-system-4f79c2d8-4e17-4d4e-900c-7ef60e990d4a/tokens/colors.css">
+  <link rel="stylesheet" href="_ds/vitalia-parapharmacie-design-system-4f79c2d8-4e17-4d4e-900c-7ef60e990d4a/tokens/typography.css">
+  <link rel="stylesheet" href="_ds/vitalia-parapharmacie-design-system-4f79c2d8-4e17-4d4e-900c-7ef60e990d4a/tokens/spacing.css">
+  <link rel="stylesheet" href="_ds/vitalia-parapharmacie-design-system-4f79c2d8-4e17-4d4e-900c-7ef60e990d4a/tokens/radii.css">
+  <link rel="stylesheet" href="_ds/vitalia-parapharmacie-design-system-4f79c2d8-4e17-4d4e-900c-7ef60e990d4a/tokens/shadows.css">
+  <link rel="stylesheet" href="_ds/vitalia-parapharmacie-design-system-4f79c2d8-4e17-4d4e-900c-7ef60e990d4a/tokens/base.css">
+  <link rel="stylesheet" href="_ds/vitalia-parapharmacie-design-system-4f79c2d8-4e17-4d4e-900c-7ef60e990d4a/styles.css">
+  <script src="_ds/vitalia-parapharmacie-design-system-4f79c2d8-4e17-4d4e-900c-7ef60e990d4a/_ds_bundle.js"></script>
+  <script src="./vitalia-data.js"></script>
+  <style>
+    body { margin: 0; }
+    a { color: var(--color-primary); }
+    a:hover { color: var(--color-primary-hover); }
+    @keyframes vtFadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes vtFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    @keyframes vtGlow {
+      0%, 100% { box-shadow: 0 0 0 rgba(255,255,255,0); }
+      50% { box-shadow: 0 18px 40px rgba(255,255,255,0.12); }
+    }
+    .vt-hero { animation: vtFadeUp .55s ease both; }
+    .vt-hero-panel { animation: vtFloat 4.5s ease-in-out infinite, vtGlow 4.5s ease-in-out infinite; }
+    .vt-product-card { animation: vtFadeUp .45s ease both; transition: transform .18s ease, box-shadow .18s ease; }
+    .vt-product-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md) !important; }
+    @media (max-width: 920px) {
+      .vt-header-nav { display: none !important; }
+      .vt-header-search { max-width: none !important; order: 0; flex-basis: 100%; min-width: 0 !important; }
+    }
+    @media (max-width: 760px) {
+      .vt-hero { padding: 32px 20px !important; }
+      .vt-hero-title { font-size: var(--text-2xl) !important; }
+      .vt-footer-grid { grid-template-columns: repeat(2, 1fr) !important; }
+      .vt-product-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)) !important; gap: 12px !important; }
+      .vt-detail-row { flex-direction: column !important; }
+      .vt-detail-photo { width: 100% !important; height: 220px !important; }
+      .vt-cart-bar { padding: 12px 16px !important; }
+    }
+    @media (max-width: 420px) {
+      .vt-footer-grid { grid-template-columns: 1fr !important; }
+    }
+  </style>
+</helmet>
+
+<div style="min-height:100vh; background:var(--color-bg); display:flex; flex-direction:column;">
+
+  <header style="display:flex; align-items:center; gap:20px; padding:14px 32px; background:var(--color-surface); border-bottom:1px solid var(--color-border); font-family:var(--font-body); position:sticky; top:0; z-index:10; flex-wrap:wrap;">
+    <div onClick="{{ goHome }}" style="display:flex; align-items:center; gap:9px; cursor:pointer; flex-shrink:0;">
+      <svg width="30" height="30" viewBox="0 0 32 32" aria-hidden="true">
+        <rect x="1" y="1" width="30" height="30" rx="9" fill="var(--color-primary)"></rect>
+        <rect x="14" y="7" width="4" height="18" rx="1.5" fill="#fff"></rect>
+        <rect x="7" y="14" width="18" height="4" rx="1.5" fill="#fff"></rect>
+      </svg>
+      <div style="display:flex; flex-direction:column; line-height:1.05;">
+        <span style="font-family:var(--font-body); font-weight:600; font-size:10px; color:var(--color-text-muted); text-transform:uppercase; letter-spacing:0.6px; white-space:nowrap;">Pharmacie</span>
+        <span style="font-family:var(--font-display); font-weight:800; font-size:22px; color:var(--color-primary); letter-spacing:-0.5px; white-space:nowrap;">Vitalia<span style="color:var(--color-accent);">.</span></span>
+      </div>
+    </div>
+
+    <div class="vt-header-search" style="flex:1; display:flex; align-items:center; gap:8px; background:var(--color-surface-sunken); border-radius:var(--radius-pill); padding:10px 18px; max-width:420px; min-width:160px;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-muted)" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      <input value="{{ query }}" onInput="{{ onQueryInput }}" placeholder="Rechercher un produit, une marque…" style="border:none; outline:none; background:transparent; flex:1; font-size:var(--text-sm); color:var(--color-text); font-family:inherit; min-width:0;">
+    </div>
+
+    <nav class="vt-header-nav" style="display:flex; gap:20px; font-size:var(--text-sm); font-weight:600; color:var(--color-text);">
+      <a href="javascript:void(0)" onClick="{{ goHome }}" style="color:inherit; text-decoration:none;">Catégories</a>
+      <a href="javascript:void(0)" style="color:inherit; text-decoration:none;">Promotions</a>
+      <a href="javascript:void(0)" style="color:inherit; text-decoration:none;">Conseils</a>
+      <a href="javascript:void(0)" onClick="{{ goLivraison }}" style="color:inherit; text-decoration:none;">Livraison</a>
+    </nav>
+
+    <div class="vt-header-actions" style="display:flex; align-items:center; gap:10px; flex-shrink:0; white-space:nowrap;">
+      <input id="vt-photo-search" type="file" accept="image/*" onChange="{{ handlePhotoSearch }}" style="display:none;">
+      <button onClick="{{ triggerPhotoSearch }}" title="Rechercher par photo" aria-label="Rechercher par photo" style="border:none; background:transparent; cursor:pointer; padding:8px; display:flex; align-items:center; flex-shrink:0;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="2"><path d="M4 8h3l2-3h6l2 3h3v11H4z"></path><circle cx="12" cy="13" r="3.5"></circle></svg>
+      </button>
+
+      <button onClick="{{ openCart }}" style="position:relative; border:none; background:transparent; cursor:pointer; padding:8px;" aria-label="Panier">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="2"><path d="M6 6h15l-1.5 9h-12z"></path><circle cx="9" cy="20" r="1"></circle><circle cx="18" cy="20" r="1"></circle><path d="M6 6L4 2H1"></path></svg>
+        <sc-if value="{{ hasCartItems }}" hint-placeholder-val="{{ false }}">
+          <span style="position:absolute; top:0; right:0; background:var(--color-accent); color:#fff; font-size:10px; font-weight:700; border-radius:50%; width:16px; height:16px; display:flex; align-items:center; justify-content:center;">{{ cartCount }}</span>
+        </sc-if>
+      </button>
+
+      <sc-if value="{{ loggedInUser }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex; align-items:center; gap:8px; font-size:var(--text-sm); font-weight:600; color:var(--color-text); white-space:nowrap;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="2" style="flex-shrink:0;"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"></path></svg>
+          <span>Bonjour, {{ loggedInFirstName }}</span>
+          <button onClick="{{ logout }}" style="border:none; background:transparent; color:var(--color-text-muted); font-size:var(--text-xs); text-decoration:underline; cursor:pointer;">Déconnexion</button>
+        </div>
+      </sc-if>
+      <sc-if value="{{ isLoggedOut }}" hint-placeholder-val="{{ true }}">
+        <a href="javascript:void(0)" onClick="{{ goLogin }}" style="display:flex; align-items:center; gap:6px; color:var(--color-primary); font-size:var(--text-sm); font-weight:700; text-decoration:none; white-space:nowrap;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="2" style="flex-shrink:0;"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"></path></svg>
+          <span>Se connecter</span>
+        </a>
+      </sc-if>
+    </div>
+  </header>
+
+  <div style="flex:1;">
+
+    <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+      <div>
+        <div class="vt-hero" style="background:linear-gradient(120deg, var(--green-700), var(--green-800)); color:#fff; padding:56px 32px; display:flex; align-items:center; justify-content:space-between; gap:24px; flex-wrap:wrap;">
+          <div style="max-width:520px;">
+            <div class="vt-hero-title" style="font-family:var(--font-display); font-weight:800; font-size:var(--text-3xl); line-height:1.25; margin:0 0 16px;">Votre santé au quotidien, livrée chez vous</div>
+            <p style="font-family:var(--font-body); font-size:var(--text-lg); color:var(--green-100); margin-bottom:24px;">Conseils de pharmaciens, marques de confiance, prix justes. Parapharmacie en ligne.</p>
+            <x-import component-from-global-scope="VitaliaParapharmacieDesignSystem_4f79c2.Button" variant="primary" size="lg" on-click="{{ revealProducts }}" hint-size="auto,52px">Voir le catalogue</x-import>
+          </div>
+        </div>
+
+        <div style="max-width:var(--container-max); margin:0 auto; padding:32px;">
+          <sc-if value="{{ showRecommendations }}" hint-placeholder-val="{{ false }}">
+            <div style="margin-bottom:32px;">
+              <div style="display:flex; align-items:baseline; gap:10px; margin-bottom:14px;">
+                <h2 style="font-family:var(--font-display); font-size:var(--text-xl); margin:0;">Recommandé pour vous</h2>
+                <span style="font-size:var(--text-xs); color:var(--color-text-muted);">Suggestion personnalisée</span>
+              </div>
+              <div style="display:flex; gap:16px; overflow-x:auto; padding-bottom:4px;">
+                <sc-for list="{{ recommendedProducts }}" as="p" hint-placeholder-count="4">
+                  <div style="background:var(--color-surface); border:1px solid var(--color-border); border-radius:var(--radius-lg); padding:14px; font-family:var(--font-body); box-shadow:var(--shadow-sm); display:flex; flex-direction:column; gap:8px; cursor:pointer; width:170px; flex-shrink:0;" onClick="{{ p.openHandler }}">
+                    <div style="background:var(--color-surface-sunken); border-radius:var(--radius-md); aspect-ratio:1; display:flex; align-items:center; justify-content:center; overflow:hidden;">
+                      <img src="{{ p.image }}" alt="{{ p.name }}" style="width:100%; height:100%; object-fit:contain; padding:10px; box-sizing:border-box;">
+                    </div>
+                    <div style="font-size:var(--text-xs); color:var(--color-text-muted); font-weight:600; text-transform:uppercase;">{{ p.brand }}</div>
+                    <div style="font-size:var(--text-sm); font-weight:600; line-height:1.3; min-height:34px;">{{ p.name }}</div>
+                    <span style="font-family:var(--font-display); font-size:var(--text-sm); font-weight:800; color:var(--color-primary); white-space:nowrap;">{{ p.priceFmt }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+
+          <div id="catalogue" style="display:flex; align-items:baseline; justify-content:space-between; gap:14px; flex-wrap:wrap; margin-bottom:18px;">
+            <div>
+              <h2 style="font-family:var(--font-display); font-size:var(--text-xl); margin:0 0 4px;">Catalogue Vitalia</h2>
+            </div>
+          </div>
+          <sc-if value="{{ productsRevealed }}" hint-placeholder-val="{{ true }}">
+            <div style="display:flex; gap:10px; margin-bottom:24px; overflow-x:auto;">
+              <sc-for list="{{ categories }}" as="cat" hint-placeholder-count="5">
+                <x-import component-from-global-scope="VitaliaParapharmacieDesignSystem_4f79c2.CategoryChip" active="{{ cat.active }}" on-click="{{ cat.onClick }}" hint-size="auto,38px">{{ cat.label }}</x-import>
+              </sc-for>
+            </div>
+            <div class="vt-product-grid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(220px, 1fr)); gap:20px;">
+              <sc-for list="{{ filteredProducts }}" as="p" hint-placeholder-count="8">
+                <div class="vt-product-card" style="background:var(--color-surface); border:1px solid var(--color-border); border-radius:var(--radius-lg); padding:16px; font-family:var(--font-body); box-shadow:var(--shadow-sm); display:flex; flex-direction:column; gap:10px; cursor:pointer;" onClick="{{ p.openHandler }}">
+                  <div style="position:relative; background:var(--color-surface-sunken); border-radius:var(--radius-md); aspect-ratio:1; display:flex; align-items:center; justify-content:center; overflow:hidden;">
+                    <img src="{{ p.image }}" alt="{{ p.name }}" style="width:100%; height:100%; object-fit:contain; padding:14px; box-sizing:border-box;">
+                    <sc-if value="{{ p.badge }}" hint-placeholder-val="{{ false }}">
+                      <div style="position:absolute; top:8px; left:8px;">
+                        <x-import component-from-global-scope="VitaliaParapharmacieDesignSystem_4f79c2.Badge" tone="accent" hint-size="auto,22px">{{ p.badge }}</x-import>
+                      </div>
+                    </sc-if>
+                  </div>
+                  <div style="font-size:var(--text-xs); color:var(--color-text-muted); font-weight:600; text-transform:uppercase; letter-spacing:0.3px;">{{ p.brand }}</div>
+                  <div style="font-size:var(--text-sm); color:var(--color-text); font-weight:600; line-height:1.35; min-height:38px;">{{ p.name }}</div>
+                  <x-import component-from-global-scope="VitaliaParapharmacieDesignSystem_4f79c2.RatingStars" value="{{ p.rating }}" count="{{ p.reviewCount }}" hint-size="auto,18px"></x-import>
+                  <div style="display:flex; align-items:center; justify-content:space-between; margin-top:2px; gap:8px;">
+                    <div style="display:flex; flex-direction:column; gap:2px; min-width:0;">
+                      <span style="font-family:var(--font-display); font-size:var(--text-sm); font-weight:800; color:var(--color-primary); white-space:nowrap;">{{ p.priceFmt }}</span>
+                      <sc-if value="{{ p.oldPrice }}" hint-placeholder-val="{{ false }}">
+                        <span style="font-size:11px; color:var(--color-text-faint); text-decoration:line-through; white-space:nowrap;">{{ p.oldPriceFmt }}</span>
+                      </sc-if>
+                    </div>
+                    <button onClick="{{ p.addHandler }}" aria-label="Ajouter au panier" style="width:36px; height:36px; border-radius:var(--radius-full); border:none; background:var(--color-accent); color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:700; flex-shrink:0;">+</button>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isDetail }}" hint-placeholder-val="{{ false }}">
+      <div style="max-width:var(--container-max); margin:0 auto; padding:32px;">
+        <button onClick="{{ backToHome }}" style="background:none; border:none; color:var(--color-primary); font-weight:600; cursor:pointer; margin-bottom:20px; font-family:var(--font-body); font-size:var(--text-base); padding:0;">← Retour</button>
+        <div class="vt-detail-row" style="display:flex; gap:40px; flex-wrap:wrap; margin-bottom:32px;">
+          <div class="vt-detail-photo" style="width:320px; height:320px; background:var(--color-surface-sunken); border-radius:var(--radius-lg); display:flex; align-items:center; justify-content:center; color:var(--color-text-faint); flex-shrink:0; overflow:hidden;">
+            <img src="{{ selectedProduct.image }}" alt="{{ selectedProduct.name }}" style="width:100%; height:100%; object-fit:contain; padding:20px; box-sizing:border-box;">
+          </div>
+          <div style="flex:1; min-width:280px;">
+            <sc-if value="{{ selectedProduct.badge }}" hint-placeholder-val="{{ false }}">
+              <div style="margin-bottom:10px;">
+                <x-import component-from-global-scope="VitaliaParapharmacieDesignSystem_4f79c2.Badge" tone="accent" hint-size="auto,26px">{{ selectedProduct.badge }}</x-import>
+              </div>
+            </sc-if>
+            <div style="font-size:var(--text-sm); color:var(--color-text-muted); font-weight:600; text-transform:uppercase; margin-bottom:6px;">{{ selectedProduct.brand }}</div>
+            <h1 style="font-family:var(--font-display); font-size:var(--text-3xl); margin:0 0 12px;">{{ selectedProduct.name }}</h1>
+            <div style="margin-bottom:14px;">
+              <x-import component-from-global-scope="VitaliaParapharmacieDesignSystem_4f79c2.RatingStars" value="{{ selectedProduct.rating }}" count="{{ selectedProduct.reviewCount }}" hint-size="auto,20px"></x-import>
+            </div>
+            <div style="display:flex; align-items:baseline; gap:10px; margin-bottom:24px; flex-wrap:wrap;">
+              <span style="font-family:var(--font-display); font-size:var(--text-xl); font-weight:800; color:var(--color-primary); white-space:nowrap;">{{ selectedProduct.priceFmt }}</span>
+              <sc-if value="{{ selectedProduct.oldPrice }}" hint-placeholder-val="{{ false }}">
+                <span style="font-size:var(--text-sm); color:var(--color-text-faint); text-decoration:line-through; font-family:var(--font-body); white-space:nowrap;">{{ selectedProduct.oldPriceFmt }}</span>
+              </sc-if>
+            </div>
+            <div style="display:flex; gap:14px; align-items:center; flex-wrap:wrap;">
+              <x-import component-from-global-scope="VitaliaParapharmacieDesignSystem_4f79c2.QuantityStepper" value="{{ qty }}" on-change="{{ setQty }}" hint-size="auto,36px"></x-import>
+              <x-import component-from-global-scope="VitaliaParapharmacieDesignSystem_4f79c2.Button" variant="primary" size="lg" on-click="{{ addSelectedToCart }}" hint-size="auto,52px">Ajouter au panier</x-import>
+            </div>
+            <div style="margin-top:22px; padding-top:18px; border-top:1px solid var(--color-border); max-width:320px;">
+              <div style="display:flex; justify-content:space-between; font-size:var(--text-xs); color:var(--color-text-muted); font-weight:600; text-transform:uppercase; margin-bottom:6px;">
+                <span>Score d'attractivité (IA)</span><span style="color:var(--color-primary);">{{ selectedProduct.purchaseScore }}%</span>
+              </div>
+              <div style="background:var(--color-surface-sunken); border-radius:var(--radius-pill); height:8px; overflow:hidden;">
+                <div style="background:var(--color-primary); height:100%; width:{{ selectedProduct.purchaseScore }}%; border-radius:var(--radius-pill);"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <x-import component-from-global-scope="VitaliaParapharmacieDesignSystem_4f79c2.Tabs" tabs="{{ tabList }}" active="{{ activeTab }}" on-change="{{ setTab }}" hint-size="100%,44px"></x-import>
+        <div style="padding:24px 0; max-width:640px; font-family:var(--font-body); color:var(--color-text); line-height:var(--leading-relaxed);">
+          <sc-if value="{{ isTabDescription }}" hint-placeholder-val="{{ true }}">
+            <p>Formule dermatologique testée, adaptée aux peaux sensibles. Application quotidienne recommandée par nos pharmaciens.</p>
+            <sc-if value="{{ selectedProduct.genDescription }}" hint-placeholder-val="{{ false }}">
+              <div style="background:var(--color-surface-sunken); border-radius:var(--radius-md); padding:14px 16px; font-size:var(--text-sm); margin-top:8px;">{{ selectedProduct.genDescription }}</div>
+            </sc-if>
+            <div style="margin-top:10px;">
+              <x-import component-from-global-scope="VitaliaParapharmacieDesignSystem_4f79c2.Button" variant="outline" size="sm" on-click="{{ generateDescription }}" hint-size="auto,36px">{{ genButtonLabel }}</x-import>
+            </div>
+          </sc-if>
+          <sc-if value="{{ isTabComposition }}" hint-placeholder-val="{{ false }}"><p>Aqua, Glycerin, Niacinamide, Panthenol — liste complète disponible sur l'emballage.</p></sc-if>
+          <sc-if value="{{ isTabAvis }}" hint-placeholder-val="{{ false }}"><p>{{ selectedProduct.reviewCount }} clients ont noté ce produit {{ selectedProduct.rating }}/5 en moyenne.</p></sc-if>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isLivraison }}" hint-placeholder-val="{{ false }}">
+      <div style="max-width:760px; margin:0 auto; padding:48px 32px;">
+        <button onClick="{{ backToHome }}" style="background:none; border:none; color:var(--color-primary); font-weight:600; cursor:pointer; margin-bottom:20px; font-family:var(--font-body); font-size:var(--text-base); padding:0;">← Retour</button>
+        <h1 style="font-family:var(--font-display); font-size:var(--text-3xl); margin:0 0 10px;">Livraison</h1>
+        <p style="color:var(--color-text-muted); font-family:var(--font-body); margin:0 0 32px; line-height:var(--leading-relaxed);">Vitalia livre partout où vous êtes, avec le même soin qu'au comptoir de la pharmacie.</p>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px,1fr)); gap:20px;">
+          <div style="background:var(--color-surface); border:1px solid var(--color-border); border-radius:var(--radius-lg); padding:22px; box-shadow:var(--shadow-sm);">
+            <div style="font-family:var(--font-display); font-weight:700; font-size:var(--text-lg); color:var(--color-primary); margin-bottom:8px;">Livraison standard</div>
+            <div style="color:var(--color-text-muted); font-size:var(--text-sm); margin-bottom:10px;">2 à 3 jours ouvrés</div>
+            <div style="font-family:var(--font-display); font-weight:800; font-size:var(--text-lg);">1 500 F CFA</div>
+          </div>
+          <div style="background:var(--color-surface); border:1px solid var(--color-border); border-radius:var(--radius-lg); padding:22px; box-shadow:var(--shadow-sm);">
+            <div style="font-family:var(--font-display); font-weight:700; font-size:var(--text-lg); color:var(--color-primary); margin-bottom:8px;">Livraison express</div>
+            <div style="color:var(--color-text-muted); font-size:var(--text-sm); margin-bottom:10px;">Sous 24h, zones urbaines</div>
+            <div style="font-family:var(--font-display); font-weight:800; font-size:var(--text-lg);">3 000 F CFA</div>
+          </div>
+          <div style="background:var(--color-surface); border:1px solid var(--color-border); border-radius:var(--radius-lg); padding:22px; box-shadow:var(--shadow-sm);">
+            <div style="font-family:var(--font-display); font-weight:700; font-size:var(--text-lg); color:var(--color-primary); margin-bottom:8px;">Retrait en pharmacie</div>
+            <div style="color:var(--color-text-muted); font-size:var(--text-sm); margin-bottom:10px;">Prêt en 2h, sans frais</div>
+            <div style="font-family:var(--font-display); font-weight:800; font-size:var(--text-lg);">Gratuit</div>
+          </div>
+        </div>
+        <p style="color:var(--color-text-muted); font-family:var(--font-body); font-size:var(--text-sm); margin-top:28px;">Stock limité sur certaines références. Vérifiez la disponibilité sur la fiche produit avant de commander.</p>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isLogin }}" hint-placeholder-val="{{ false }}">
+      <div style="max-width:400px; margin:0 auto; padding:48px 32px;">
+        
+        
+
+        <sc-if value="{{ isLoginMode }}" hint-placeholder-val="{{ true }}">
+          <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: 26px; box-shadow: var(--shadow-sm); width:100%; box-sizing:border-box;">
+            <div style="font-family:var(--font-display); font-weight:800; text-align:center; text-transform:uppercase; letter-spacing:0.6px; margin-bottom:22px;">Connexion</div>
+            
+            <div style="display:flex; flex-direction:column; gap:16px; margin-bottom:18px;">
+              <input value="{{ loginEmail }}" onInput="{{ setLoginEmail }}" type="email" placeholder="Adresse e-mail" style="width:100%; box-sizing:border-box; border:1.5px solid var(--color-border-strong); border-radius:var(--radius-md); padding:11px 14px; font-family:var(--font-body); font-size:var(--text-base); color:var(--color-text);">
+              <input value="{{ loginPassword }}" onInput="{{ setLoginPassword }}" type="password" placeholder="Mot de passe" style="width:100%; box-sizing:border-box; border:1.5px solid var(--color-border-strong); border-radius:var(--radius-md); padding:11px 14px; font-family:var(--font-body); font-size:var(--text-base); color:var(--color-text);">
+            </div>
+            
+            
+            <x-import component-from-global-scope="VitaliaParapharmacieDesignSystem_4f79c2.Button" variant="primary" size="md" on-click="{{ loginExisting }}" hint-size="100%,44px">Se connecter</x-import><div style="text-align:center; margin-top:16px; font-size:var(--text-sm); font-family:var(--font-body); color:var(--color-text-muted);">
+              Première visite ? <button onClick="{{ switchToSignup }}" style="background:none; border:none; color:var(--color-primary); font-weight:700; cursor:pointer; padding:0; font-size:var(--text-sm); font-family:inherit;">Créer un compte</button>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ isSignupMode }}" hint-placeholder-val="{{ false }}">
+          <div style="background:var(--color-surface); border:1px solid var(--color-border); border-radius:var(--radius-lg); padding:26px; box-shadow:var(--shadow-sm); width:100%; box-sizing:border-box;">
+            <div style="font-family:var(--font-display); font-weight:800; text-align:center; text-transform:uppercase; letter-spacing:0.6px; margin-bottom:10px;">Inscription</div>
+            <p style="color:var(--color-text-muted); font-size:var(--text-xs); margin:0 0 18px; text-align:center;">Remplissez vos informations pour créer votre compte.</p>
+            <div style="display:flex; flex-direction:column; gap:16px; margin-bottom:18px;">
+              <input value="{{ newAccountName }}" onInput="{{ setNewAccountName }}" placeholder="Nom complet" style="width:100%; box-sizing:border-box; border:1.5px solid var(--color-border-strong); border-radius:var(--radius-md); padding:11px 14px; font-family:var(--font-body); font-size:var(--text-base); color:var(--color-text);">
+              <input value="{{ newAccountEmail }}" onInput="{{ setNewAccountEmail }}" type="email" placeholder="Adresse e-mail" style="width:100%; box-sizing:border-box; border:1.5px solid var(--color-border-strong); border-radius:var(--radius-md); padding:11px 14px; font-family:var(--font-body); font-size:var(--text-base); color:var(--color-text);">
+              <input value="{{ newAccountPhone }}" onInput="{{ setNewAccountPhone }}" placeholder="Téléphone" style="width:100%; box-sizing:border-box; border:1.5px solid var(--color-border-strong); border-radius:var(--radius-md); padding:11px 14px; font-family:var(--font-body); font-size:var(--text-base); color:var(--color-text);">
+              <input value="{{ newAccountPassword }}" onInput="{{ setNewAccountPassword }}" type="password" placeholder="Mot de passe" style="width:100%; box-sizing:border-box; border:1.5px solid var(--color-border-strong); border-radius:var(--radius-md); padding:11px 14px; font-family:var(--font-body); font-size:var(--text-base); color:var(--color-text);">
+            </div>
+            <x-import component-from-global-scope="VitaliaParapharmacieDesignSystem_4f79c2.Button" variant="primary" size="md" on-click="{{ createAccount }}" hint-size="100%,44px">Créer mon compte</x-import>
+            <div style="text-align:center; margin-top:16px; font-size:var(--text-sm); font-family:var(--font-body); color:var(--color-text-muted);">
+              Déjà un compte ? <button onClick="{{ switchToLogin }}" style="background:none; border:none; color:var(--color-primary); font-weight:700; cursor:pointer; padding:0; font-size:var(--text-sm); font-family:inherit;">Se connecter</button>
+            </div>
+          </div>
+        </sc-if>
+
+        <button onClick="{{ goHome }}" style="background:none; border:none; color:var(--color-text-muted); font-family:var(--font-body); font-size:var(--text-sm); cursor:pointer; margin-top:20px; padding:0;">← Continuer sans se connecter</button>
+      </div>
+    </sc-if>
+
+  </div>
+
+  <footer style="background:var(--green-900); color:var(--neutral-0); padding:48px 32px 24px; font-family:var(--font-body);">
+    <div class="vt-footer-grid" style="display:grid; grid-template-columns:repeat(4, 1fr); gap:32px; max-width:var(--container-max); margin:0 auto;">
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <svg width="24" height="24" viewBox="0 0 32 32" aria-hidden="true">
+            <rect x="1" y="1" width="30" height="30" rx="9" fill="#fff"></rect>
+            <rect x="14" y="7" width="4" height="18" rx="1.5" fill="var(--green-900)"></rect>
+            <rect x="7" y="14" width="18" height="4" rx="1.5" fill="var(--green-900)"></rect>
+          </svg>
+          <div style="display:flex; flex-direction:column; line-height:1.05;">
+            <span style="font-family:var(--font-body); font-weight:600; font-size:9px; color:var(--ink-300); text-transform:uppercase; letter-spacing:0.6px; white-space:nowrap;">Pharmacie</span>
+            <span style="font-family:var(--font-display); font-weight:800; font-size:20px; white-space:nowrap;">Vitalia<span style="color:var(--coral-500);">.</span></span>
+          </div>
+        </div>
+        <p style="color:var(--ink-300); font-size:var(--text-sm); max-width:220px;">Votre parapharmacie en ligne : conseils, prix justes, livraison rapide.</p>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        <div style="font-family:var(--font-display); font-weight:700; font-size:var(--text-sm); margin-bottom:4px;">Espace</div>
+        <a href="javascript:void(0)" onClick="{{ goHome }}" style="color:var(--ink-300); font-size:var(--text-sm); text-decoration:none;">Visage</a>
+        <a href="javascript:void(0)" onClick="{{ goHome }}" style="color:var(--ink-300); font-size:var(--text-sm); text-decoration:none;">Cheveux</a>
+        <a href="javascript:void(0)" onClick="{{ goHome }}" style="color:var(--ink-300); font-size:var(--text-sm); text-decoration:none;">Cosmétiques</a>
+        <a href="javascript:void(0)" onClick="{{ goHome }}" style="color:var(--ink-300); font-size:var(--text-sm); text-decoration:none;">Bébé &amp; Maman</a>
+        <a href="javascript:void(0)" onClick="{{ goHome }}" style="color:var(--ink-300); font-size:var(--text-sm); text-decoration:none;">Compléments</a>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        <div style="font-family:var(--font-display); font-weight:700; font-size:var(--text-sm); margin-bottom:4px;">Aide</div>
+        <a href="javascript:void(0)" onClick="{{ goLivraison }}" style="color:var(--ink-300); font-size:var(--text-sm); text-decoration:none;">Livraison</a>
+        <a href="javascript:void(0)" style="color:var(--ink-300); font-size:var(--text-sm); text-decoration:none;">Retours</a>
+        <a href="javascript:void(0)" style="color:var(--ink-300); font-size:var(--text-sm); text-decoration:none;">Contact</a>
+        <a href="javascript:void(0)" style="color:var(--ink-300); font-size:var(--text-sm); text-decoration:none;">FAQ</a>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        <div style="font-family:var(--font-display); font-weight:700; font-size:var(--text-sm); margin-bottom:4px;">Vitalia</div>
+        <a href="javascript:void(0)" style="color:var(--ink-300); font-size:var(--text-sm); text-decoration:none;">À propos</a>
+        <a href="javascript:void(0)" style="color:var(--ink-300); font-size:var(--text-sm); text-decoration:none;">Nos pharmaciens</a>
+        <a href="javascript:void(0)" style="color:var(--ink-300); font-size:var(--text-sm); text-decoration:none;">Mentions légales</a>
+      </div>
+    </div>
+    <div style="border-top:1px solid rgba(255,255,255,0.12); margin-top:36px; padding-top:18px; text-align:center; font-size:var(--text-xs); color:var(--ink-300);">
+      © 2026 Pharmacie Vitalia. Tous droits réservés.
+    </div>
+  </footer>
+
+  <sc-if value="{{ showCartBar }}" hint-placeholder-val="{{ false }}">
+    <div class="vt-cart-bar" style="position:sticky; bottom:0; z-index:20; background:var(--color-surface); border-top:1px solid var(--color-border); box-shadow:var(--shadow-lg); padding:14px 32px; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; font-family:var(--font-body);">
+      <div style="font-size:var(--text-sm); color:var(--color-text); white-space:nowrap;"><strong>{{ cartCount }}</strong> article(s) · <strong style="color:var(--color-primary); font-family:var(--font-display);">{{ cartTotalFmt }}</strong></div>
+      <x-import component-from-global-scope="VitaliaParapharmacieDesignSystem_4f79c2.Button" variant="primary" size="md" on-click="{{ openCart }}" hint-size="auto,44px">Voir le panier</x-import>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ cartOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed; inset:0; z-index:50; font-family:var(--font-body);">
+      <div onClick="{{ closeCart }}" style="position:absolute; inset:0; background:rgba(11,61,42,0.45); backdrop-filter:blur(2px);"></div>
+      <div style="position:absolute; top:0; right:0; height:100%; width:380px; max-width:92vw; background:var(--color-surface); box-shadow:var(--shadow-lg); display:flex; flex-direction:column;">
+        <div style="padding:20px; border-bottom:1px solid var(--color-border); display:flex; justify-content:space-between; align-items:center;">
+          <div style="font-family:var(--font-display); font-weight:700; font-size:var(--text-lg);">{{ drawerTitle }}</div>
+          <button onClick="{{ closeCart }}" style="border:none; background:transparent; font-size:20px; cursor:pointer; color:var(--color-text-muted);">×</button>
+        </div>
+
+        <sc-if value="{{ isCartStep }}" hint-placeholder-val="{{ true }}">
+          <div style="flex:1; overflow-y:auto; padding:16px 20px; display:flex; flex-direction:column; gap:16px;">
+            <sc-if value="{{ cartEmpty }}" hint-placeholder-val="{{ false }}">
+              <div style="color:var(--color-text-muted); font-size:var(--text-sm); text-align:center; margin-top:40px;">Votre panier est vide.</div>
+            </sc-if>
+            <sc-for list="{{ cartItems }}" as="item" hint-placeholder-count="3">
+              <div style="display:flex; gap:12px; align-items:center;">
+                <div style="width:56px; height:56px; background:var(--color-surface-sunken); border-radius:var(--radius-md); flex-shrink:0;"></div>
+                <div style="flex:1; min-width:0;">
+                  <div style="font-size:var(--text-sm); font-weight:600;">{{ item.name }}</div>
+                  <div style="font-size:var(--text-xs); color:var(--color-text-muted); white-space:nowrap;">{{ item.priceFmt }}</div>
+                </div>
+                <x-import component-from-global-scope="VitaliaParapharmacieDesignSystem_4f79c2.QuantityStepper" value="{{ item.qty }}" on-change="{{ item.onQtyChange }}" hint-size="auto,32px"></x-import>
+              </div>
+            </sc-for>
+          </div>
+          <div style="padding:20px; border-top:1px solid var(--color-border);">
+            <div style="display:flex; justify-content:space-between; margin-bottom:14px; font-family:var(--font-display); font-weight:700; gap:8px;">
+              <span>Total</span><span style="white-space:nowrap;">{{ cartTotalFmt }}</span>
+            </div>
+            <x-import component-from-global-scope="VitaliaParapharmacieDesignSystem_4f79c2.Button" variant="primary" size="lg" disabled="{{ cartEmpty }}" on-click="{{ goToDelivery }}" hint-size="100%,52px">Passer la commande</x-import>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ isDeliveryStep }}" hint-placeholder-val="{{ false }}">
+          <div style="flex:1; overflow-y:auto; padding:20px; display:flex; flex-direction:column; gap:16px;">
+            <label style="display:flex; flex-direction:column; gap:6px; font-size:var(--text-xs); color:var(--color-text-muted); font-weight:700; text-transform:uppercase;">
+              Nom complet
+              <input value="{{ deliveryName }}" onInput="{{ setDeliveryName }}" placeholder="Votre nom" style="width:100%; box-sizing:border-box; border:1.5px solid var(--color-border-strong); border-radius:var(--radius-md); padding:11px 14px; font-family:var(--font-body); font-size:var(--text-base); color:var(--color-text); text-transform:none; font-weight:400;">
+            </label>
+            <label style="display:flex; flex-direction:column; gap:6px; font-size:var(--text-xs); color:var(--color-text-muted); font-weight:700; text-transform:uppercase;">
+              Adresse de livraison
+              <input value="{{ deliveryAddress }}" onInput="{{ setDeliveryAddress }}" placeholder="Rue, quartier, ville" style="width:100%; box-sizing:border-box; border:1.5px solid var(--color-border-strong); border-radius:var(--radius-md); padding:11px 14px; font-family:var(--font-body); font-size:var(--text-base); color:var(--color-text); text-transform:none; font-weight:400;">
+            </label>
+            <label style="display:flex; flex-direction:column; gap:6px; font-size:var(--text-xs); color:var(--color-text-muted); font-weight:700; text-transform:uppercase;">
+              Téléphone
+              <input value="{{ deliveryPhone }}" onInput="{{ setDeliveryPhone }}" placeholder="+225 …" style="width:100%; box-sizing:border-box; border:1.5px solid var(--color-border-strong); border-radius:var(--radius-md); padding:11px 14px; font-family:var(--font-body); font-size:var(--text-base); color:var(--color-text); text-transform:none; font-weight:400;">
+            </label>
+            <x-import component-from-global-scope="VitaliaParapharmacieDesignSystem_4f79c2.Select" label="Mode de livraison" options="{{ deliveryOptions }}" value="{{ deliveryMethod }}" on-change="{{ setDeliveryMethod }}" hint-size="100%,48px"></x-import>
+            <div>
+              <x-import component-from-global-scope="VitaliaParapharmacieDesignSystem_4f79c2.Button" variant="outline" size="sm" on-click="{{ optimizeDiscount }}" hint-size="auto,36px">{{ discountButtonLabel }}</x-import>
+              <sc-if value="{{ discountApplied }}" hint-placeholder-val="{{ false }}">
+                <div style="font-size:var(--text-xs); color:var(--green-700); margin-top:6px;">Remise IA appliquée : -{{ discountPct }}%</div>
+              </sc-if>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-family:var(--font-display); font-weight:700; padding-top:8px; border-top:1px solid var(--color-border); gap:8px;">
+              <span>Total à payer</span><span style="white-space:nowrap;">{{ orderTotalFmt }}</span>
+            </div>
+          </div>
+          <div style="padding:20px; border-top:1px solid var(--color-border); display:flex; flex-direction:column; gap:10px;">
+            <x-import component-from-global-scope="VitaliaParapharmacieDesignSystem_4f79c2.Button" variant="primary" size="lg" on-click="{{ confirmOrder }}" hint-size="100%,52px">Confirmer la commande</x-import>
+            <x-import component-from-global-scope="VitaliaParapharmacieDesignSystem_4f79c2.Button" variant="ghost" size="md" on-click="{{ backToCart }}" hint-size="100%,40px">← Retour au panier</x-import>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ toastMessage }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed; bottom:24px; right:24px; z-index:60;">
+      <x-import component-from-global-scope="VitaliaParapharmacieDesignSystem_4f79c2.Toast" message="{{ toastMessage }}" tone="success" hint-size="260px,52px"></x-import>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ cookieConsentPending }}" hint-placeholder-val="{{ true }}">
+    <div style="position:fixed; left:24px; bottom:24px; z-index:58; width:420px; max-width:calc(100vw - 48px); background:var(--color-surface); border:1px solid var(--color-border); box-shadow:var(--shadow-lg); border-radius:var(--radius-lg); padding:18px; font-family:var(--font-body);">
+      <div style="font-family:var(--font-display); font-weight:700; margin-bottom:6px;">Confidentialité</div>
+      <p style="margin:0 0 14px; color:var(--color-text-muted); font-size:var(--text-sm); line-height:var(--leading-relaxed);">Vitalia utilise uniquement un stockage local pour mémoriser le panier, le compte de démonstration et améliorer le test du site.</p>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <x-import component-from-global-scope="VitaliaParapharmacieDesignSystem_4f79c2.Button" variant="primary" size="sm" on-click="{{ acceptCookies }}" hint-size="auto,36px">Accepter</x-import>
+        <x-import component-from-global-scope="VitaliaParapharmacieDesignSystem_4f79c2.Button" variant="ghost" size="sm" on-click="{{ refuseCookies }}" hint-size="auto,36px">Refuser</x-import>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ assistantOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed; bottom:96px; right:20px; z-index:56; width:340px; max-width:88vw; background:var(--color-surface); border-radius:var(--radius-lg); box-shadow:var(--shadow-lg); border:1px solid var(--color-border); padding:18px; font-family:var(--font-body);">
+      <div style="display:flex; align-items:flex-start; gap:8px; margin-bottom:8px;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="2" style="flex-shrink:0; margin-top:2px;"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+        <div style="font-family:var(--font-display); font-weight:700; line-height:1.3;">Conseil IA</div>
+      </div>
+      <p style="color:var(--color-text-muted); font-size:var(--text-xs); margin:0 0 12px;">Réponse générée par IA. Ne remplace pas l'avis d'un professionnel de santé.</p>
+      <input value="{{ assistantQuestion }}" onInput="{{ setAssistantQuestion }}" placeholder="Ex : Quelle crème pour une peau sensible ?" style="width:100%; box-sizing:border-box; border:1.5px solid var(--color-border-strong); border-radius:var(--radius-md); padding:10px 12px; font-family:var(--font-body); font-size:var(--text-sm); color:var(--color-text); margin-bottom:10px;">
+      <x-import component-from-global-scope="VitaliaParapharmacieDesignSystem_4f79c2.Button" variant="primary" size="sm" on-click="{{ runAssistant }}" hint-size="100%,36px">{{ assistantButtonLabel }}</x-import>
+      <sc-if value="{{ assistantAnswer }}" hint-placeholder-val="{{ false }}">
+        <div style="background:var(--color-surface-sunken); border-radius:var(--radius-md); padding:12px; font-size:var(--text-sm); line-height:var(--leading-relaxed); margin-top:12px; max-height:220px; overflow-y:auto;">{{ assistantAnswer }}</div>
+      </sc-if>
+    </div>
+  </sc-if>
+
+  <button onClick="{{ toggleAssistant }}" title="Discuter avec Lia" aria-label="Discuter avec Lia" style="position:fixed; bottom:20px; right:20px; z-index:57; width:56px; height:56px; border-radius:50%; border:none; background:var(--color-primary); box-shadow:var(--shadow-lg); cursor:pointer; display:flex; align-items:center; justify-content:center;">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+  </button>
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = {
+    view: 'home',
+    selectedProductId: null,
+    activeCategory: 'visage',
+    cart: [],
+    cartOpen: false,
+    checkoutStep: 'cart',
+    deliveryMethod: 'Livraison standard (2-3 jours) — 1 500 F CFA',
+    deliveryName: '',
+    deliveryAddress: '',
+    deliveryPhone: '',
+    toastMessage: null,
+    query: '',
+    qty: 1,
+    activeTab: 'Description',
+
+    productsRevealed: true,
+
+    loggedInUser: null,
+    registeredAccounts: [],
+    authMode: 'login',
+    loginEmail: '',
+    loginPassword: '',
+    newAccountName: '',
+    newAccountEmail: '',
+    newAccountPhone: '',
+    newAccountPassword: '',
+
+    assistantOpen: false,
+    assistantQuestion: '',
+    assistantAnswer: '',
+    assistantLoading: false,
+
+    genDescriptions: {},
+    genLoadingId: null,
+
+    discountPct: 0,
+    discountApplied: false,
+    discountLoading: false,
+
+    cookieConsent: null,
+  };
+
+  componentDidMount() {
+    if (typeof window === 'undefined') return;
+    try {
+      const saved = JSON.parse(window.localStorage.getItem('vitalia-shop') || '{}');
+      this.setState({
+        cart: Array.isArray(saved.cart) ? saved.cart : [],
+        loggedInUser: saved.loggedInUser || null,
+        registeredAccounts: Array.isArray(saved.registeredAccounts) ? saved.registeredAccounts : [],
+        deliveryName: saved.deliveryName || '',
+        deliveryAddress: saved.deliveryAddress || '',
+        deliveryPhone: saved.deliveryPhone || '',
+        cookieConsent: window.localStorage.getItem('vitalia-cookie-consent') || null,
+      });
+    } catch (err) {
+      this.setState({ cookieConsent: null });
+    }
+  }
+
+  persistShop(nextState) {
+    if (typeof window === 'undefined') return;
+    const s = nextState || this.state;
+    window.localStorage.setItem('vitalia-shop', JSON.stringify({
+      cart: s.cart,
+      loggedInUser: s.loggedInUser,
+      deliveryName: s.deliveryName,
+      deliveryAddress: s.deliveryAddress,
+      deliveryPhone: s.deliveryPhone,
+      registeredAccounts: s.registeredAccounts || [],
+    }));
+  }
+
+  acceptCookies() {
+    if (typeof window !== 'undefined') window.localStorage.setItem('vitalia-cookie-consent', 'accepted');
+    this.setState({ cookieConsent: 'accepted' });
+  }
+
+  refuseCookies() {
+    if (typeof window !== 'undefined') window.localStorage.setItem('vitalia-cookie-consent', 'refused');
+    this.setState({ cookieConsent: 'refused' });
+  }
+
+  fmtXof(eur) {
+    if (typeof window !== 'undefined' && window.vitaliaFmtXof) return window.vitaliaFmtXof(eur);
+    return Math.round(eur * 655) + ' F CFA';
+  }
+
+  getProducts() {
+    return (typeof window !== 'undefined' && window.VITALIA_PRODUCTS) || [];
+  }
+  getCategories() {
+    return (typeof window !== 'undefined' && window.VITALIA_CATEGORIES) || [];
+  }
+
+  openProduct(p) {
+    this.setState({ view: 'detail', selectedProductId: p.id, qty: 1, activeTab: 'Description' });
+  }
+
+  showToast(msg) {
+    this.setState({ toastMessage: msg });
+    clearTimeout(this._toastTimer);
+    this._toastTimer = setTimeout(() => this.setState({ toastMessage: null }), 2500);
+  }
+
+  addToCart(p, qty) {
+    if (!this.state.loggedInUser) { this.setState({ view: 'login' }); return; }
+    qty = qty || 1;
+    this.setState((s) => {
+      const existing = s.cart.find((i) => i.id === p.id);
+      const cart = existing
+        ? s.cart.map((i) => (i.id === p.id ? { ...i, qty: i.qty + qty } : i))
+        : [...s.cart, { id: p.id, name: p.name, price: p.price, qty }];
+      return { cart };
+    }, () => this.persistShop());
+    this.showToast(p.name + ' ajouté au panier');
+  }
+
+  getCustomers() {
+    return (typeof window !== 'undefined' && window.VITALIA_CUSTOMERS) || [];
+  }
+
+  loginExisting() {
+    const email = (this.state.loginEmail || '').trim().toLowerCase();
+    if (!email || !this.state.loginPassword) {
+      this.showToast('Entrez votre e-mail et votre mot de passe.');
+      return;
+    }
+    const customers = this.getCustomers();
+    const registered = this.state.registeredAccounts || [];
+    const customer = registered.find((c) => (c.email || '').toLowerCase() === email)
+      || customers.find((c) => (c.email || '').toLowerCase() === email);
+    if (!customer) {
+      this.showToast('Compte introuvable. Créez un compte pour continuer.');
+      this.setState({ authMode: 'signup', newAccountEmail: email });
+      return;
+    }
+    this.setState({ loggedInUser: customer, view: 'home', loginEmail: '', loginPassword: '' }, () => this.persistShop());
+    this.showToast('Connecté en tant que ' + customer.name);
+  }
+
+  forgotPassword() {
+    this.showToast('Un lien de réinitialisation a été envoyé par e-mail.');
+  }
+
+  createAccount() {
+    const name = (this.state.newAccountName || '').trim();
+    if (!name) return;
+    const customer = {
+      id: 'new-' + Date.now(),
+      name,
+      email: (this.state.newAccountEmail || '').trim(),
+      phone: (this.state.newAccountPhone || '').trim(),
+      orders: 0,
+      spent: 0,
+      since: '2026',
+    };
+    this.setState((s) => ({
+      loggedInUser: customer,
+      registeredAccounts: [...(s.registeredAccounts || []), customer],
+      view: 'home',
+      newAccountName: '',
+      newAccountEmail: '',
+      newAccountPhone: '',
+      newAccountPassword: '',
+    }), () => this.persistShop());
+    this.showToast('Bienvenue, ' + name + ' !');
+  }
+
+  triggerPhotoSearch() {
+    const el = document.getElementById('vt-photo-search');
+    if (el) el.click();
+  }
+
+  handlePhotoSearch(e) {
+    const file = e.target.files && e.target.files[0];
+    if (!file || typeof window === 'undefined' || !window.vitaliaClassifyColor) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = 24; canvas.height = 24;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, 24, 24);
+        const data = ctx.getImageData(0, 0, 24, 24).data;
+        let r = 0, g = 0, b = 0, n = 0;
+        for (let i = 0; i < data.length; i += 4) { r += data[i]; g += data[i + 1]; b += data[i + 2]; n++; }
+        r /= n; g /= n; b /= n;
+        const result = window.vitaliaClassifyColor(r, g, b);
+        const top = result[0];
+        const categories = this.getCategories();
+        const cat = categories.find((c) => c.id === top.id);
+        this.setState({ activeCategory: top.id, view: 'home' });
+        this.showToast('Catégorie détectée (IA) : ' + (cat ? cat.label : top.id) + ' — ' + top.pct + '%');
+      };
+      img.src = ev.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  toggleAssistant() {
+    this.setState((s) => ({ assistantOpen: !s.assistantOpen }));
+  }
+
+  async postJson(url, payload) {
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    if (!res.ok) throw new Error('Erreur API');
+    return res.json();
+  }
+
+  async runAssistant() {
+    const q = this.state.assistantQuestion;
+    if (!q || this.state.assistantLoading) return;
+    this.setState({ assistantLoading: true, assistantAnswer: '' });
+    try {
+      const result = await this.postJson('/api/assistant', { question: q });
+      if (result.category && result.category.id) {
+        this.setState({ activeCategory: result.category.id, productsRevealed: true });
+      }
+      this.setState({ assistantLoading: false, assistantAnswer: result.answer });
+    } catch (err) {
+      this.setState({ assistantLoading: false, assistantAnswer: 'Le service IA est indisponible pour le moment. Réessayez après le démarrage du backend.' });
+    }
+  }
+
+  async generateDescription(product) {
+    if (this.state.genLoadingId === product.id) return;
+    this.setState({ genLoadingId: product.id });
+    try {
+      const result = await this.postJson('/api/product-description', { product });
+      this.setState((s) => ({ genLoadingId: null, genDescriptions: { ...s.genDescriptions, [product.id]: result.text } }));
+    } catch (err) {
+      this.setState({ genLoadingId: null });
+    }
+  }
+
+  async optimizeDiscount(cartTotalEur, cartCount) {
+    this.setState({ discountLoading: true });
+    try {
+      const segment = typeof window !== 'undefined' && window.vitaliaSegment
+        ? window.vitaliaSegment(this.state.loggedInUser)
+        : 'Découverte';
+      const result = await this.postJson('/api/discount', { cartTotal: cartTotalEur, cartCount, customerSegment: segment });
+      this.setState({ discountPct: result.discount || 0, discountApplied: true, discountLoading: false });
+    } catch (err) {
+      const pct = typeof window !== 'undefined' && window.vitaliaRunBandit ? window.vitaliaRunBandit() : 5;
+      this.setState({ discountPct: pct, discountApplied: true, discountLoading: false });
+    }
+  }
+
+  scrollToCatalog() {
+    if (typeof document === 'undefined') return;
+    const el = document.getElementById('catalogue');
+    if (el && el.scrollIntoView) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  async confirmOrder(items, subtotal, total) {
+    if (!items.length) return;
+    const customerName = (this.state.deliveryName || (this.state.loggedInUser && this.state.loggedInUser.name) || '').trim();
+    const phone = (this.state.deliveryPhone || this.state.loggedInUser?.phone || '').trim();
+    const address = (this.state.deliveryAddress || '').trim();
+    if (!customerName || !phone || !address) {
+      this.showToast('Complétez le nom, le téléphone et l’adresse.');
+      return;
+    }
+
+    try {
+      const result = await this.postJson('/api/orders', {
+        customerName,
+        phone,
+        address,
+        deliveryMethod: this.state.deliveryMethod,
+        items,
+        subtotal,
+        discountPct: this.state.discountApplied ? this.state.discountPct : 0,
+        total,
+      });
+      this.setState({
+        cartOpen: false,
+        cart: [],
+        checkoutStep: 'cart',
+        discountPct: 0,
+        discountApplied: false,
+      }, () => this.persistShop());
+      this.showToast('Commande ' + result.order.id + ' confirmée — merci !');
+    } catch (err) {
+      this.showToast('Impossible d’enregistrer la commande pour le moment.');
+    }
+  }
+
+  renderVals() {
+    const products = this.getProducts();
+    const categories = this.getCategories();
+    const customers = this.getCustomers();
+    const selectedProductRaw = products.find((p) => p.id === this.state.selectedProductId) || {};
+    const purchaseScoreFn = (typeof window !== 'undefined' && window.vitaliaPurchaseScore) || (() => 50);
+    const selectedProduct = {
+      ...selectedProductRaw,
+      image: selectedProductRaw.id ? 'assets/products/' + selectedProductRaw.id + '.png' : '',
+      priceFmt: selectedProductRaw.price != null ? this.fmtXof(selectedProductRaw.price) : '',
+      oldPriceFmt: selectedProductRaw.oldPrice != null ? this.fmtXof(selectedProductRaw.oldPrice) : '',
+      purchaseScore: selectedProductRaw.id ? purchaseScoreFn(selectedProductRaw) : 0,
+      genDescription: this.state.genDescriptions[selectedProductRaw.id] || null,
+    };
+
+    const recommendedProducts = this.state.loggedInUser
+      ? products
+          .filter((p) => p.category !== this.state.activeCategory)
+          .map((p) => ({ ...p, score: purchaseScoreFn(p) }))
+          .sort((a, b) => b.score - a.score)
+          .slice(0, 4)
+          .map((p) => ({ ...p, image: 'assets/products/' + p.id + '.png', priceFmt: this.fmtXof(p.price), openHandler: () => this.openProduct(p) }))
+      : [];
+
+    const normalizedQuery = (this.state.query || '').trim().toLowerCase();
+    const filteredProducts = products
+      .filter((p) => {
+        const inCategory = normalizedQuery ? true : p.category === this.state.activeCategory;
+        const haystack = (p.brand + ' ' + p.name + ' ' + p.category).toLowerCase();
+        const inSearch = !normalizedQuery || haystack.indexOf(normalizedQuery) !== -1;
+        return inCategory && inSearch;
+      })
+      .map((p) => ({
+        ...p,
+        image: 'assets/products/' + p.id + '.png',
+        priceFmt: this.fmtXof(p.price),
+        oldPriceFmt: p.oldPrice != null ? this.fmtXof(p.oldPrice) : '',
+        openHandler: () => this.openProduct(p),
+        addHandler: (e) => { if (e && e.stopPropagation) e.stopPropagation(); this.addToCart(p, 1); },
+      }));
+
+    const categoryVals = categories.map((c) => ({
+      ...c,
+      active: c.id === this.state.activeCategory,
+      onClick: () => this.setState({ activeCategory: c.id, view: 'home' }),
+    }));
+
+    const cartItems = this.state.cart.map((i) => ({
+      ...i,
+      priceFmt: this.fmtXof(i.price),
+      onQtyChange: (v) => this.setState((s) => ({
+        cart: s.cart
+          .map((it) => (it.id === i.id ? { ...it, qty: Math.max(0, v) } : it))
+          .filter((it) => it.qty > 0),
+      }), () => this.persistShop()),
+    }));
+    const cartCount = this.state.cart.reduce((s, i) => s + i.qty, 0);
+    const cartTotalEur = this.state.cart.reduce((s, i) => s + i.price * i.qty, 0);
+
+    const deliveryOptions = [
+      'Livraison standard (2-3 jours) — 1 500 F CFA',
+      'Livraison express (24h) — 3 000 F CFA',
+      'Retrait en pharmacie — Gratuit',
+    ];
+    const deliveryFeeEur = this.state.deliveryMethod.indexOf('express') !== -1 ? 3000 / 655
+      : this.state.deliveryMethod.indexOf('Retrait') !== -1 ? 0
+      : 1500 / 655;
+    const discountedCartEur = cartTotalEur * (1 - (this.state.discountApplied ? this.state.discountPct : 0) / 100);
+    const orderTotalEur = discountedCartEur + deliveryFeeEur;
+
+    return {
+      query: this.state.query,
+      onQueryInput: (e) => this.setState({ query: e.target.value, productsRevealed: true }),
+      goHome: () => this.setState({ view: 'home' }),
+      goLivraison: () => this.setState({ view: 'livraison' }),
+      goLogin: () => this.setState({ view: 'login', authMode: 'login' }),
+      backToHome: () => this.setState({ view: 'home' }),
+
+      productsRevealed: this.state.productsRevealed,
+      productsHidden: false,
+      revealProducts: () => this.setState({ view: 'home', productsRevealed: true }, () => this.scrollToCatalog()),
+
+      isLoginMode: this.state.authMode === 'login',
+      isSignupMode: this.state.authMode === 'signup',
+      authTitle: this.state.authMode === 'login' ? 'Se connecter' : 'Inscription',
+      switchToSignup: () => this.setState({ authMode: 'signup' }),
+      switchToLogin: () => this.setState({ authMode: 'login' }),
+      loginPassword: this.state.loginPassword,
+      setLoginPassword: (e) => this.setState({ loginPassword: e.target.value }),
+      forgotPassword: () => this.forgotPassword(),
+
+      loggedInUser: this.state.loggedInUser,
+      isLoggedOut: !this.state.loggedInUser,
+      loggedInFirstName: this.state.loggedInUser ? this.state.loggedInUser.name.split(' ')[0] : '',
+      logout: () => this.setState({ loggedInUser: null }, () => this.persistShop()),
+
+      loginEmail: this.state.loginEmail,
+      setLoginEmail: (e) => this.setState({ loginEmail: e.target.value }),
+      loginExisting: () => this.loginExisting(),
+      newAccountName: this.state.newAccountName,
+      setNewAccountName: (e) => this.setState({ newAccountName: e.target.value }),
+      newAccountEmail: this.state.newAccountEmail,
+      setNewAccountEmail: (e) => this.setState({ newAccountEmail: e.target.value }),
+      newAccountPhone: this.state.newAccountPhone,
+      setNewAccountPhone: (e) => this.setState({ newAccountPhone: e.target.value }),
+      newAccountPassword: this.state.newAccountPassword,
+      setNewAccountPassword: (e) => this.setState({ newAccountPassword: e.target.value }),
+      createAccount: () => this.createAccount(),
+
+      triggerPhotoSearch: () => this.triggerPhotoSearch(),
+      handlePhotoSearch: (e) => this.handlePhotoSearch(e),
+
+      showRecommendations: recommendedProducts.length > 0,
+      recommendedProducts,
+
+      assistantOpen: this.state.assistantOpen,
+      toggleAssistant: () => this.toggleAssistant(),
+      assistantQuestion: this.state.assistantQuestion,
+      setAssistantQuestion: (e) => this.setState({ assistantQuestion: e.target.value }),
+      assistantAnswer: this.state.assistantAnswer,
+      assistantButtonLabel: this.state.assistantLoading ? 'Génération…' : 'Demander conseil',
+      runAssistant: () => this.runAssistant(),
+
+      genButtonLabel: this.state.genLoadingId === this.state.selectedProductId
+        ? 'Génération…'
+        : (this.state.genDescriptions[this.state.selectedProductId] ? 'Régénérer (IA)' : 'Générer une fiche enrichie (IA)'),
+      generateDescription: () => this.generateDescription(selectedProductRaw),
+
+      discountButtonLabel: this.state.discountLoading ? 'Calcul…' : (this.state.discountApplied ? 'Recalculer (IA)' : 'IA : optimiser ma remise'),
+      discountApplied: this.state.discountApplied,
+      discountPct: this.state.discountPct,
+      optimizeDiscount: () => this.optimizeDiscount(cartTotalEur, cartCount),
+
+      openCart: () => {
+        if (!this.state.loggedInUser) { this.setState({ view: 'login' }); return; }
+        this.setState({ cartOpen: true, checkoutStep: 'cart' });
+      },
+      closeCart: () => this.setState({ cartOpen: false }),
+      cartOpen: this.state.cartOpen,
+      hasCartItems: cartCount > 0,
+      cartCount,
+      cartTotalFmt: this.fmtXof(cartTotalEur),
+      showCartBar: cartCount > 0 && !this.state.cartOpen,
+
+      cartItems,
+      cartEmpty: cartItems.length === 0,
+      isCartStep: this.state.checkoutStep === 'cart',
+      isDeliveryStep: this.state.checkoutStep === 'delivery',
+      drawerTitle: this.state.checkoutStep === 'cart' ? 'Mon panier' : 'Livraison & confirmation',
+      goToDelivery: () => { if (cartCount > 0) this.setState({ checkoutStep: 'delivery' }); },
+      backToCart: () => this.setState({ checkoutStep: 'cart' }),
+
+      deliveryOptions,
+      deliveryMethod: this.state.deliveryMethod,
+      setDeliveryMethod: (v) => this.setState({ deliveryMethod: v }, () => this.persistShop()),
+      deliveryName: this.state.deliveryName || (this.state.loggedInUser ? this.state.loggedInUser.name : ''),
+      setDeliveryName: (e) => this.setState({ deliveryName: e.target.value }, () => this.persistShop()),
+      deliveryAddress: this.state.deliveryAddress,
+      setDeliveryAddress: (e) => this.setState({ deliveryAddress: e.target.value }, () => this.persistShop()),
+      deliveryPhone: this.state.deliveryPhone || (this.state.loggedInUser && this.state.loggedInUser.phone) || '',
+      setDeliveryPhone: (e) => this.setState({ deliveryPhone: e.target.value }, () => this.persistShop()),
+      orderTotalFmt: this.fmtXof(orderTotalEur),
+      confirmOrder: () => this.confirmOrder(cartItems, cartTotalEur, orderTotalEur),
+
+      toastMessage: this.state.toastMessage,
+
+      isHome: this.state.view === 'home',
+      isDetail: this.state.view === 'detail',
+      isLivraison: this.state.view === 'livraison',
+      isLogin: this.state.view === 'login',
+      categories: categoryVals,
+      filteredProducts,
+
+      selectedProduct,
+      qty: this.state.qty,
+      setQty: (v) => this.setState({ qty: v }),
+      addSelectedToCart: () => this.addToCart(selectedProductRaw, this.state.qty),
+
+      tabList: ['Description', 'Composition', 'Avis'],
+      activeTab: this.state.activeTab,
+      setTab: (t) => this.setState({ activeTab: t }),
+      isTabDescription: this.state.activeTab === 'Description',
+      isTabComposition: this.state.activeTab === 'Composition',
+      isTabAvis: this.state.activeTab === 'Avis',
+
+      cookieConsentPending: !this.state.cookieConsent,
+      acceptCookies: () => this.acceptCookies(),
+      refuseCookies: () => this.refuseCookies(),
+    };
+  }
+}
+
+</script>
+</body>
+</html>
