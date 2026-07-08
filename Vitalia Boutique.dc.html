@@ -344,7 +344,10 @@
             </div>
             
             
-            <x-import component-from-global-scope="VitaliaParapharmacieDesignSystem_4f79c2.Button" variant="primary" size="md" on-click="{{ loginExisting }}" hint-size="100%,44px">Se connecter</x-import><div style="text-align:center; margin-top:16px; font-size:var(--text-sm); font-family:var(--font-body); color:var(--color-text-muted);">
+            <div style="display:flex; justify-content:center;">
+              <x-import component-from-global-scope="VitaliaParapharmacieDesignSystem_4f79c2.Button" variant="primary" size="md" on-click="{{ loginExisting }}" hint-size="220px,44px">Se connecter</x-import>
+            </div>
+            <div style="text-align:center; margin-top:16px; font-size:var(--text-sm); font-family:var(--font-body); color:var(--color-text-muted);">
               <button onClick="{{ forgotPassword }}" style="display:block; margin:0 auto 12px; background:none; border:none; color:var(--color-text-muted); font-size:var(--text-xs); text-decoration:underline; cursor:pointer; font-family:inherit;">Mot de passe oublié ?</button>
               Première visite ? <button onClick="{{ switchToSignup }}" style="background:none; border:none; color:var(--color-primary); font-weight:700; cursor:pointer; padding:0; font-size:var(--text-sm); font-family:inherit;">Créer un compte</button>
             </div>
@@ -362,7 +365,9 @@
               <input value="{{ newAccountPassword }}" onInput="{{ setNewAccountPassword }}" type="password" placeholder="Mot de passe" style="width:100%; box-sizing:border-box; border:1.5px solid var(--color-border-strong); border-radius:var(--radius-md); padding:11px 14px; font-family:var(--font-body); font-size:var(--text-base); color:var(--color-text);">
               <input value="{{ newAccountPasswordConfirm }}" onInput="{{ setNewAccountPasswordConfirm }}" type="password" placeholder="Confirmer le mot de passe" style="width:100%; box-sizing:border-box; border:1.5px solid var(--color-border-strong); border-radius:var(--radius-md); padding:11px 14px; font-family:var(--font-body); font-size:var(--text-base); color:var(--color-text);">
             </div>
-            <x-import component-from-global-scope="VitaliaParapharmacieDesignSystem_4f79c2.Button" variant="primary" size="md" on-click="{{ createAccount }}" hint-size="100%,44px">Créer mon compte</x-import>
+            <div style="display:flex; justify-content:center;">
+              <x-import component-from-global-scope="VitaliaParapharmacieDesignSystem_4f79c2.Button" variant="primary" size="md" on-click="{{ createAccount }}" hint-size="220px,44px">Créer mon compte</x-import>
+            </div>
             <div style="text-align:center; margin-top:16px; font-size:var(--text-sm); font-family:var(--font-body); color:var(--color-text-muted);">
               Déjà un compte ? <button onClick="{{ switchToLogin }}" style="background:none; border:none; color:var(--color-primary); font-weight:700; cursor:pointer; padding:0; font-size:var(--text-sm); font-family:inherit;">Se connecter</button>
             </div>
