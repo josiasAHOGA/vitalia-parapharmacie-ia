@@ -42,9 +42,15 @@
       .vt-header-search { max-width: none !important; order: 0; flex-basis: 100%; min-width: 0 !important; }
     }
     @media (max-width: 760px) {
-      header { padding: 12px 16px !important; gap: 12px !important; }
-      .vt-header-search { order: 2 !important; flex-basis: 100% !important; max-width: none !important; }
-      .vt-header-actions { margin-left: auto !important; gap: 6px !important; }
+      header { padding: 12px 16px !important; gap: 10px !important; align-items:center !important; }
+      .vt-brand { max-width: calc(100vw - 190px) !important; min-width: 0 !important; }
+      .vt-brand-name { font-size:20px !important; }
+      .vt-header-search { order: 3 !important; flex: 0 0 100% !important; width:100% !important; max-width: none !important; min-width:0 !important; padding:9px 14px !important; }
+      .vt-header-actions { margin-left: auto !important; gap: 4px !important; min-width:0 !important; max-width: calc(100vw - 150px) !important; justify-content:flex-end !important; }
+      .vt-header-actions button { padding:6px !important; }
+      .vt-user-box { gap:4px !important; min-width:0 !important; flex-shrink:1 !important; }
+      .vt-user-greeting { max-width:76px !important; overflow:hidden !important; text-overflow:ellipsis !important; white-space:nowrap !important; }
+      .vt-logout { padding:0 !important; font-size:11px !important; }
       .vt-hero { padding: 32px 20px !important; }
       .vt-hero-title { font-size: var(--text-2xl) !important; }
       .vt-footer-grid { grid-template-columns: repeat(2, 1fr) !important; }
@@ -57,6 +63,12 @@
       .vt-cookie-panel { left: 12px !important; right: 12px !important; bottom: 12px !important; width: auto !important; max-width: none !important; }
     }
     @media (max-width: 420px) {
+      header { padding: 10px 12px !important; }
+      .vt-brand { max-width: calc(100vw - 170px) !important; gap:7px !important; }
+      .vt-brand-name { font-size:18px !important; }
+      .vt-brand-subtitle { display:none !important; }
+      .vt-header-actions { max-width: calc(100vw - 130px) !important; gap:2px !important; }
+      .vt-user-greeting { display:none !important; }
       .vt-footer-grid { grid-template-columns: 1fr !important; }
       .vt-product-grid { grid-template-columns: 1fr !important; }
       .vt-product-card { padding: 14px !important; }
@@ -67,15 +79,15 @@
 <div style="min-height:100vh; background:var(--color-bg); display:flex; flex-direction:column;">
 
   <header style="display:flex; align-items:center; gap:12px; padding:14px 28px; background:var(--color-surface); border-bottom:1px solid var(--color-border); font-family:var(--font-body); position:sticky; top:0; z-index:10; flex-wrap:wrap;">
-    <div onClick="{{ goHome }}" style="display:flex; align-items:center; gap:9px; cursor:pointer; flex-shrink:0;">
+    <div class="vt-brand" onClick="{{ goHome }}" style="display:flex; align-items:center; gap:9px; cursor:pointer; flex-shrink:0;">
       <svg width="30" height="30" viewBox="0 0 32 32" aria-hidden="true">
         <rect x="1" y="1" width="30" height="30" rx="9" fill="var(--color-primary)"></rect>
         <rect x="14" y="7" width="4" height="18" rx="1.5" fill="#fff"></rect>
         <rect x="7" y="14" width="18" height="4" rx="1.5" fill="#fff"></rect>
       </svg>
       <div style="display:flex; flex-direction:column; line-height:1.05;">
-        <span style="font-family:var(--font-body); font-weight:600; font-size:10px; color:var(--color-text-muted); text-transform:uppercase; letter-spacing:0.6px; white-space:nowrap;">Pharmacie</span>
-        <span style="font-family:var(--font-display); font-weight:800; font-size:22px; color:var(--color-primary); letter-spacing:-0.5px; white-space:nowrap;">Vitalia<span style="color:var(--color-accent);">.</span></span>
+        <span class="vt-brand-subtitle" style="font-family:var(--font-body); font-weight:600; font-size:10px; color:var(--color-text-muted); text-transform:uppercase; letter-spacing:0.6px; white-space:nowrap;">Pharmacie</span>
+        <span class="vt-brand-name" style="font-family:var(--font-display); font-weight:800; font-size:22px; color:var(--color-primary); letter-spacing:-0.5px; white-space:nowrap;">Vitalia<span style="color:var(--color-accent);">.</span></span>
       </div>
     </div>
 
@@ -105,10 +117,10 @@
       </button>
 
       <sc-if value="{{ loggedInUser }}" hint-placeholder-val="{{ false }}">
-        <div style="display:flex; align-items:center; gap:6px; font-size:var(--text-xs); font-weight:600; color:var(--color-text); white-space:nowrap;">
+        <div class="vt-user-box" style="display:flex; align-items:center; gap:6px; font-size:var(--text-xs); font-weight:600; color:var(--color-text); white-space:nowrap;">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="2" style="flex-shrink:0;"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"></path></svg>
-          <span>Bonjour, {{ loggedInFirstName }}</span>
-          <button onClick="{{ logout }}" style="border:none; background:transparent; color:var(--color-text-muted); font-size:var(--text-xs); text-decoration:underline; cursor:pointer;">Déconnexion</button>
+          <span class="vt-user-greeting">Bonjour, {{ loggedInFirstName }}</span>
+          <button class="vt-logout" onClick="{{ logout }}" style="border:none; background:transparent; color:var(--color-text-muted); font-size:var(--text-xs); text-decoration:underline; cursor:pointer;">Déconnexion</button>
         </div>
       </sc-if>
       <sc-if value="{{ isLoggedOut }}" hint-placeholder-val="{{ true }}">
