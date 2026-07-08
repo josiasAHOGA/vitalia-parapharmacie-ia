@@ -1,0 +1,8 @@
+services:
+  - type: web
+    name: vitalia-parapharmacie-ia
+    env: node
+    plan: free
+    buildCommand: ""
+    startCommand: "npm start"
+    autoDeploy: true
