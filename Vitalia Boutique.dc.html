@@ -748,29 +748,59 @@ class Component extends DCLogic {
     if (el) el.click();
   }
 
-  handlePhotoSearch(e) {
-    const file = e.target.files && e.target.files[0];
-    if (!file || typeof window === 'undefined' || !window.vitaliaClassifyColor) return;
-    const reader = new FileReader();
-    reader.onload = (ev) => {
+  imageSignature(src) {
+    return new Promise((resolve, reject) => {
       const img = new Image();
       img.onload = () => {
         const canvas = document.createElement('canvas');
-        canvas.width = 24; canvas.height = 24;
+        canvas.width = 32; canvas.height = 32;
         const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0, 24, 24);
-        const data = ctx.getImageData(0, 0, 24, 24).data;
+        ctx.drawImage(img, 0, 0, 32, 32);
+        const data = ctx.getImageData(0, 0, 32, 32).data;
         let r = 0, g = 0, b = 0, n = 0;
-        for (let i = 0; i < data.length; i += 4) { r += data[i]; g += data[i + 1]; b += data[i + 2]; n++; }
-        r /= n; g /= n; b /= n;
-        const result = window.vitaliaClassifyColor(r, g, b);
-        const top = result[0];
-        const categories = this.getCategories();
-        const cat = categories.find((c) => c.id === top.id);
-        this.setState({ activeCategory: top.id, view: 'home' });
-        this.showToast('Catégorie détectée (IA) : ' + (cat ? cat.label : top.id) + ' - ' + top.pct + '%');
+        for (let i = 0; i < data.length; i += 4) {
+          const alpha = data[i + 3];
+          if (alpha < 20) continue;
+          r += data[i]; g += data[i + 1]; b += data[i + 2]; n++;
+        }
+        if (!n) return resolve([0, 0, 0]);
+        resolve([r / n, g / n, b / n]);
       };
-      img.src = ev.target.result;
+      img.onerror = reject;
+      img.src = src;
+    });
+  }
+
+  signatureDistance(a, b) {
+    return Math.sqrt((a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2 + (a[2] - b[2]) ** 2);
+  }
+
+  handlePhotoSearch(e) {
+    const file = e.target.files && e.target.files[0];
+    if (!file || typeof window === 'undefined') return;
+    const reader = new FileReader();
+    reader.onload = async (ev) => {
+      try {
+        const inputSignature = await this.imageSignature(ev.target.result);
+        const products = this.getProducts();
+        const scored = await Promise.all(products.map(async (product) => {
+          const signature = await this.imageSignature('assets/products/' + product.id + '.png');
+          return { product, distance: this.signatureDistance(inputSignature, signature) };
+        }));
+        scored.sort((a, b) => a.distance - b.distance);
+        const match = scored[0] && scored[0].product;
+        if (!match) return;
+        this.setState({
+          activeCategory: match.category,
+          query: match.name,
+          view: 'home',
+          homePanel: 'catalogue',
+          productsRevealed: true,
+        }, () => this.scrollToCatalog());
+        this.showToast('Produit détecté (IA) : ' + match.brand + ' ' + match.name);
+      } catch (err) {
+        this.showToast('Image non reconnue. Essayez une photo plus nette.');
+      }
     };
     reader.readAsDataURL(file);
   }
